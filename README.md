@@ -309,6 +309,8 @@ The system supports USD to INR conversion with:
 
 ## Production Deployment
 
+> **⚠️ Docker Not Required**: If you don't have Docker installed, use the non-Docker options below. See [QUICK_DEPLOY.md](./QUICK_DEPLOY.md) for step-by-step instructions.
+
 ### Quick Deployment Options
 
 #### Option 1: One-Click Deployment
@@ -318,14 +320,21 @@ The system supports USD to INR conversion with:
 ./deploy.sh
 ```
 
-#### Option 2: Docker Compose (Recommended)
+#### Option 2: Local Development (No Docker Required)
 
 ```bash
-# Deploy everything with Docker
-docker-compose up -d
+# Deploy locally without Docker
+./deploy-local.sh
 ```
 
-#### Option 3: Cloud Platforms
+#### Option 3: Cloud Deployment
+
+```bash
+# Interactive cloud deployment
+./deploy-cloud.sh
+```
+
+#### Option 4: Cloud Platforms
 
 **Recommended Stack: Vercel (Frontend) + Railway (Backend)**
 

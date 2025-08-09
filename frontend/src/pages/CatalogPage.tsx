@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ProductCard } from '../components/ProductCard';
+import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { Product, ProductType } from '../types';
 import { productService, productTypeService } from '../services/api';
 
@@ -33,7 +34,7 @@ export const CatalogPage: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleTypeFilter = async (typeName: string) => {
+  const handleTypeFilter = useCallback(async (typeName: string) => {
     try {
       setSelectedType(typeName);
       setLoading(true);
@@ -53,9 +54,9 @@ export const CatalogPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const groupProductsByType = () => {
+  const groupedProducts = useMemo(() => {
     const grouped: { [key: string]: Product[] } = {};
     
     products.forEach(product => {
@@ -67,9 +68,9 @@ export const CatalogPage: React.FC = () => {
     });
     
     return grouped;
-  };
+  }, [products]);
 
-  const renderProductsByType = () => {
+  const renderProductsByType = useMemo(() => {
     if (selectedType !== 'all') {
       return (
         <div className="products-grid">
@@ -79,8 +80,6 @@ export const CatalogPage: React.FC = () => {
         </div>
       );
     }
-
-    const groupedProducts = groupProductsByType();
     
     return (
       <div>
@@ -101,10 +100,10 @@ export const CatalogPage: React.FC = () => {
         ))}
       </div>
     );
-  };
+  }, [selectedType, products, groupedProducts]);
 
   if (loading) {
-    return <div className="loading">Loading catalog...</div>;
+    return <LoadingSkeleton count={6} />;
   }
 
   if (error) {
@@ -141,7 +140,7 @@ export const CatalogPage: React.FC = () => {
           <p>There are no products available for the selected category.</p>
         </div>
       ) : (
-        renderProductsByType()
+        renderProductsByType
       )}
     </div>
   );

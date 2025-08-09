@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { formatPriceRange, convertUSDToINR } from '../utils/currency';
@@ -7,14 +7,21 @@ interface ProductCardProps {
   product: Product;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     navigate(`/products/${product.id}`);
-  };
+  }, [navigate, product.id]);
 
-  const getPriceRange = () => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  }, [handleClick]);
+
+  const priceRange = useMemo(() => {
     if (product.variants.length === 0) return 'No variants';
     
     const prices = product.variants.map(v => convertUSDToINR(v.price));
@@ -22,9 +29,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const maxPrice = Math.max(...prices);
     
     return formatPriceRange(minPrice, maxPrice);
-  };
+  }, [product.variants]);
 
-  const getProductTypeBadgeClass = () => {
+  const badgeClass = useMemo(() => {
     const typeName = product.productType.name.toLowerCase();
     switch (typeName) {
       case 'food':
@@ -36,20 +43,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       default:
         return 'product-type-badge';
     }
-  };
+  }, [product.productType.name]);
 
-  const hasAddOns = product.addOns && product.addOns.length > 0;
-  const isFood = product.productType.name.toLowerCase() === 'food';
+  const productMeta = useMemo(() => {
+    const hasAddOns = product.addOns && product.addOns.length > 0;
+    const isFood = product.productType.name.toLowerCase() === 'food';
+    return { hasAddOns, isFood };
+  }, [product.addOns, product.productType.name]);
 
   return (
-    <div className="product-card" onClick={handleClick}>
+    <div 
+      className="product-card" 
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${product.name}`}
+    >
       <div className="product-image-container">
         <img
           src={product.images[0] || 'https://via.placeholder.com/350x250?text=No+Image'}
           alt={product.name}
           className="product-image"
+          loading="lazy"
         />
-        <span className={getProductTypeBadgeClass()}>
+        <span className={badgeClass}>
           {product.productType.name}
         </span>
         <div className="product-overlay">
@@ -74,7 +92,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </span>
             </div>
           )}
-          {isFood && hasAddOns && (
+          {productMeta.isFood && productMeta.hasAddOns && (
             <div className="feature-item">
               <span className="feature-icon">➕</span>
               <span className="feature-text">Customizable</span>
@@ -85,7 +103,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="product-meta">
           <div className="price-container">
             <span className="price-label">From</span>
-            <span className="price-range">{getPriceRange()}</span>
+            <span className="price-range">{priceRange}</span>
           </div>
           <div className="action-button">
             <span>Explore</span>
@@ -94,4 +112,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
     </div>
   );
-};
+});

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Product, Variant, AddOn, SelectedAddOn } from '../types';
+import { Product, Variant, SelectedAddOn } from '../types';
 import { productService } from '../services/api';
 import { VariantSelector } from '../components/VariantSelector';
 import { AddOnSelector } from '../components/AddOnSelector';
 import { PriceCalculator } from '../components/PriceCalculator';
+import { ProductDetailSkeleton } from '../components/LoadingSkeleton';
 import '../styles/ProductDetail.css';
 
 export const ProductDetailPage: React.FC = () => {
@@ -57,11 +58,11 @@ export const ProductDetailPage: React.FC = () => {
     fetchProduct();
   }, [id]);
 
-  const handleVariantChange = (variant: Variant) => {
+  const handleVariantChange = useCallback((variant: Variant) => {
     setSelectedVariant(variant);
-  };
+  }, []);
 
-  const handleAddOnToggle = (addOnId: string) => {
+  const handleAddOnToggle = useCallback((addOnId: string) => {
     setSelectedAddOns(prev =>
       prev.map(item =>
         item.addOn.id === addOnId
@@ -69,9 +70,17 @@ export const ProductDetailPage: React.FC = () => {
           : item
       )
     );
-  };
+  }, []);
 
-  const calculateTotalPrice = () => {
+  const handleImageChange = useCallback((index: number) => {
+    setCurrentImageIndex(index);
+  }, []);
+
+  const handleBackClick = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  const totalPrice = useMemo(() => {
     let total = selectedVariant ? selectedVariant.price : 0;
     
     selectedAddOns.forEach(item => {
@@ -81,12 +90,20 @@ export const ProductDetailPage: React.FC = () => {
     });
     
     return total;
-  };
+  }, [selectedVariant, selectedAddOns]);
 
-  const isFood = product?.productType.name.toLowerCase() === 'food';
+  const isFood = useMemo(() => 
+    product?.productType.name.toLowerCase() === 'food', 
+    [product?.productType.name]
+  );
+
+  const selectedAddOnsList = useMemo(() => 
+    selectedAddOns.filter(item => item.selected), 
+    [selectedAddOns]
+  );
 
   if (loading) {
-    return <div className="loading">Loading product details...</div>;
+    return <ProductDetailSkeleton />;
   }
 
   if (error || !product) {
@@ -102,7 +119,7 @@ export const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="product-detail">
-      <button onClick={() => navigate('/')} className="back-button">
+      <button onClick={handleBackClick} className="back-button">
         ← Back to Catalog
       </button>
 
@@ -123,7 +140,7 @@ export const ProductDetailPage: React.FC = () => {
                   src={image}
                   alt={`${product.name} ${index + 1}`}
                   className={`thumbnail ${currentImageIndex === index ? 'active' : ''}`}
-                  onClick={() => setCurrentImageIndex(index)}
+                  onClick={() => handleImageChange(index)}
                 />
               ))}
             </div>
@@ -170,8 +187,8 @@ export const ProductDetailPage: React.FC = () => {
           {/* Price Calculator */}
           <PriceCalculator
             selectedVariant={selectedVariant}
-            selectedAddOns={selectedAddOns.filter(item => item.selected)}
-            totalPrice={calculateTotalPrice()}
+            selectedAddOns={selectedAddOnsList}
+            totalPrice={totalPrice}
           />
 
           {/* Stock Information */}

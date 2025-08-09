@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { Variant } from "../types";
 import { formatINR, convertUSDToINR } from "../utils/currency";
 
@@ -15,32 +15,57 @@ export const VariantSelector: React.FC<VariantSelectorProps> = ({
   onVariantChange,
   productType,
 }) => {
-  const groupVariantsByAttribute = () => {
+  // Memoize expensive calculations
+  const variantData = useMemo(() => {
     const hasSize = variants.some((v) => v.size);
     const hasColor = variants.some((v) => v.color);
+    
+    const sizes: string[] = hasSize ? [...new Set(variants.map(v => v.size).filter((size): size is string => Boolean(size)))] : [];
+    const colors: string[] = hasColor ? [...new Set(variants.map(v => v.color).filter((color): color is string => Boolean(color)))] : [];
+    
+    // Create a lookup map for faster variant finding
+    const variantMap = new Map<string, Variant>();
+    variants.forEach(variant => {
+      const key = `${variant.size || 'null'}-${variant.color || 'null'}`;
+      variantMap.set(key, variant);
+    });
 
-    return { hasSize, hasColor };
-  };
+    return { hasSize, hasColor, sizes, colors, variantMap };
+  }, [variants]);
 
-  const getUniqueValues = (attribute: "size" | "color") => {
-    const values = variants
-      .map((v) => v[attribute])
-      .filter((value, index, arr) => value && arr.indexOf(value) === index);
-    return values as string[];
-  };
-
-  const getVariantByAttributes = (size?: string, color?: string) => {
-    return variants.find(
-      (v) => (!size || v.size === size) && (!color || v.color === color)
-    );
-  };
-
-  const { hasSize, hasColor } = groupVariantsByAttribute();
-
-  // Determine the label for color attribute based on product type
-  const getColorLabel = () => {
+  // Memoize color label
+  const colorLabel = useMemo(() => {
     return productType?.toLowerCase() === "electronics" ? "Processor" : "Color";
-  };
+  }, [productType]);
+
+  // Optimized variant finder using the lookup map
+  const getVariantByAttributes = useCallback((size?: string, color?: string) => {
+    const key = `${size || 'null'}-${color || 'null'}`;
+    return variantData.variantMap.get(key);
+  }, [variantData.variantMap]);
+
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleSizeChange = useCallback((size: string) => {
+    const variant = getVariantByAttributes(size, selectedVariant?.color);
+    if (variant && variant.stock > 0) {
+      onVariantChange(variant);
+    }
+  }, [getVariantByAttributes, selectedVariant?.color, onVariantChange]);
+
+  const handleColorChange = useCallback((color: string) => {
+    const variant = getVariantByAttributes(selectedVariant?.size, color);
+    if (variant && variant.stock > 0) {
+      onVariantChange(variant);
+    }
+  }, [getVariantByAttributes, selectedVariant?.size, onVariantChange]);
+
+  const handleVariantClick = useCallback((variant: Variant) => {
+    if (variant.stock > 0) {
+      onVariantChange(variant);
+    }
+  }, [onVariantChange]);
+
+  const { hasSize, hasColor, sizes, colors } = variantData;
 
   if (variants.length === 1) {
     return (
@@ -50,7 +75,7 @@ export const VariantSelector: React.FC<VariantSelectorProps> = ({
             {variants[0].size && <span>Size: {variants[0].size}</span>}
             {variants[0].color && (
               <span>
-                {getColorLabel()}: {variants[0].color}
+                {colorLabel}: {variants[0].color}
               </span>
             )}
             <span className="variant-price">
@@ -69,55 +94,56 @@ export const VariantSelector: React.FC<VariantSelectorProps> = ({
 
   if (hasSize && hasColor) {
     // Complex variant selection with both size and color
-    const sizes = getUniqueValues("size");
-    const colors = getUniqueValues("color");
-
     return (
       <div className="variant-complex">
         <div className="variant-attributes">
           <div className="attribute-group">
             <label>Size:</label>
             <div className="attribute-options">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  className={`attribute-option ${
-                    selectedVariant?.size === size ? "selected" : ""
-                  }`}
-                  onClick={() => {
-                    const variant = getVariantByAttributes(
-                      size,
-                      selectedVariant?.color
-                    );
-                    if (variant) onVariantChange(variant);
-                  }}
-                >
-                  {size}
-                </button>
-              ))}
+              {sizes.map((size) => {
+                const variant = getVariantByAttributes(size, selectedVariant?.color);
+                const isAvailable = variant ? variant.stock > 0 : false;
+                const isSelected = selectedVariant?.size === size;
+                
+                return (
+                  <button
+                    key={size}
+                    type="button"
+                    className={`attribute-option ${isSelected ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`}
+                    onClick={() => handleSizeChange(size)}
+                    disabled={!isAvailable}
+                    aria-pressed={isSelected}
+                    aria-label={`Select size ${size}`}
+                  >
+                    {size}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div className="attribute-group">
-            <label>{getColorLabel()}:</label>
+            <label>{colorLabel}:</label>
             <div className="attribute-options">
-              {colors.map((color) => (
-                <button
-                  key={color}
-                  className={`attribute-option ${
-                    selectedVariant?.color === color ? "selected" : ""
-                  }`}
-                  onClick={() => {
-                    const variant = getVariantByAttributes(
-                      selectedVariant?.size,
-                      color
-                    );
-                    if (variant) onVariantChange(variant);
-                  }}
-                >
-                  {color}
-                </button>
-              ))}
+              {colors.map((color) => {
+                const variant = getVariantByAttributes(selectedVariant?.size, color);
+                const isAvailable = variant ? variant.stock > 0 : false;
+                const isSelected = selectedVariant?.color === color;
+                
+                return (
+                  <button
+                    key={color}
+                    type="button"
+                    className={`attribute-option ${isSelected ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`}
+                    onClick={() => handleColorChange(color)}
+                    disabled={!isAvailable}
+                    aria-pressed={isSelected}
+                    aria-label={`Select ${colorLabel.toLowerCase()} ${color}`}
+                  >
+                    {color}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -151,7 +177,16 @@ export const VariantSelector: React.FC<VariantSelectorProps> = ({
             className={`variant-card ${
               selectedVariant?.id === variant.id ? "selected" : ""
             } ${variant.stock === 0 ? "out-of-stock" : ""}`}
-            onClick={() => variant.stock > 0 && onVariantChange(variant)}
+            onClick={() => handleVariantClick(variant)}
+            role="button"
+            tabIndex={variant.stock > 0 ? 0 : -1}
+            aria-label={`Select variant: ${variant.size || ''} ${variant.color || ''} - ${formatINR(convertUSDToINR(variant.price))}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleVariantClick(variant);
+              }
+            }}
           >
             <div className="variant-info">
               {variant.size && (
