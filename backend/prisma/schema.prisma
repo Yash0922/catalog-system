@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ProductType {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("product_types")
+}
+
+model Product {
+  id            String      @id @default(cuid())
+  name          String
+  description   String?
+  images        String[]
+  productTypeId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  addOns        AddOn[]
+  productType   ProductType @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
+  variants      Variant[]
+
+  @@map("products")
+}
+
+model Variant {
+  id        String   @id @default(cuid())
+  size      String?
+  color     String?
+  price     Float
+  stock     Int      @default(0)
+  sku       String   @unique
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("variants")
+}
+
+model AddOn {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  productId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("add_ons")
+}

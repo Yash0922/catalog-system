@@ -1,0 +1,11 @@
+id,name,description,price,productId,createdAt,updatedAt
+addon-001,Extra Cheese,Additional mozzarella cheese,2.50,pizza-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-002,Pepperoni,Premium pepperoni slices,3.00,pizza-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-003,Mushrooms,Fresh mushrooms,2.00,pizza-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-004,Bell Peppers,Colorful bell peppers,1.50,pizza-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-005,Olives,Mediterranean olives,2.25,pizza-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-006,Extra Patty,Additional beef patty,4.00,burger-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-007,Bacon,Crispy bacon strips,2.50,burger-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-008,Avocado,Fresh avocado slices,1.75,burger-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-009,Onion Rings,Crispy onion rings,2.00,burger-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z
+addon-010,Spicy Mayo,House special spicy mayo,0.75,burger-001,2024-01-01T00:00:00.000Z,2024-01-01T00:00:00.000Z

@@ -1,0 +1,30 @@
+product_name,variant_size,variant_color,price_usd,stock,sku,description
+Smartphone Pro,128GB,Black,299.99,25,PHONE-PRO-128-BLK,128GB Storage - Black Color
+Smartphone Pro,128GB,White,299.99,20,PHONE-PRO-128-WHT,128GB Storage - White Color
+Smartphone Pro,128GB,Blue,299.99,18,PHONE-PRO-128-BLU,128GB Storage - Blue Color
+Smartphone Pro,256GB,Black,349.99,15,PHONE-PRO-256-BLK,256GB Storage - Black Color
+Smartphone Pro,256GB,White,349.99,12,PHONE-PRO-256-WHT,256GB Storage - White Color
+Smartphone Pro,256GB,Blue,349.99,10,PHONE-PRO-256-BLU,256GB Storage - Blue Color
+Smartphone Pro,512GB,Black,449.99,8,PHONE-PRO-512-BLK,512GB Storage - Black Color
+Smartphone Pro,512GB,White,449.99,6,PHONE-PRO-512-WHT,512GB Storage - White Color
+Gaming Laptop,8GB+512GB,Intel i5,599.99,12,LAPTOP-GAM-8GB-I5,8GB RAM + 512GB SSD with Intel i5 Processor
+Gaming Laptop,16GB+512GB,Intel i5,699.99,10,LAPTOP-GAM-16GB-I5,16GB RAM + 512GB SSD with Intel i5 Processor
+Gaming Laptop,16GB+1TB,Intel i5,799.99,8,LAPTOP-GAM-16GB-1TB-I5,16GB RAM + 1TB SSD with Intel i5 Processor
+Gaming Laptop,16GB+512GB,Intel i7,899.99,6,LAPTOP-GAM-16GB-I7,16GB RAM + 512GB SSD with Intel i7 Processor
+Gaming Laptop,32GB+1TB,Intel i7,1199.99,4,LAPTOP-GAM-32GB-I7,32GB RAM + 1TB SSD with Intel i7 Processor
+Gaming Laptop,32GB+2TB,Intel i9,1599.99,2,LAPTOP-GAM-32GB-I9,32GB RAM + 2TB SSD with Intel i9 Processor
+Gaming Desktop PC,16GB+1TB,Intel i5+RTX3060,899.99,8,DESKTOP-GAM-16GB-I5-3060,16GB RAM + 1TB SSD with Intel i5 + RTX 3060
+Gaming Desktop PC,32GB+1TB,Intel i7+RTX3070,1299.99,6,DESKTOP-GAM-32GB-I7-3070,32GB RAM + 1TB SSD with Intel i7 + RTX 3070
+Gaming Desktop PC,32GB+2TB,Intel i7+RTX3080,1699.99,4,DESKTOP-GAM-32GB-I7-3080,32GB RAM + 2TB SSD with Intel i7 + RTX 3080
+Gaming Desktop PC,64GB+2TB,Intel i9+RTX4080,2299.99,2,DESKTOP-GAM-64GB-I9-4080,64GB RAM + 2TB SSD with Intel i9 + RTX 4080
+Gaming Desktop PC,64GB+4TB,Intel i9+RTX4090,2999.99,1,DESKTOP-GAM-64GB-I9-4090,64GB RAM + 4TB SSD with Intel i9 + RTX 4090
+Pro Tablet,64GB+4GB,WiFi,199.99,20,TABLET-PRO-64GB-WIFI,64GB Storage + 4GB RAM - WiFi Only
+Pro Tablet,128GB+6GB,WiFi,299.99,15,TABLET-PRO-128GB-WIFI,128GB Storage + 6GB RAM - WiFi Only
+Pro Tablet,256GB+8GB,WiFi,399.99,12,TABLET-PRO-256GB-WIFI,256GB Storage + 8GB RAM - WiFi Only
+Pro Tablet,128GB+6GB,Cellular,399.99,10,TABLET-PRO-128GB-CELL,128GB Storage + 6GB RAM - WiFi + Cellular
+Pro Tablet,256GB+8GB,Cellular,499.99,8,TABLET-PRO-256GB-CELL,256GB Storage + 8GB RAM - WiFi + Cellular
+Pro Tablet,512GB+12GB,Cellular,699.99,5,TABLET-PRO-512GB-CELL,512GB Storage + 12GB RAM - WiFi + Cellular
+Smart Watch Pro,32GB,GPS,199.99,25,WATCH-PRO-32GB-GPS,32GB Storage with GPS
+Smart Watch Pro,32GB,GPS+Cellular,299.99,20,WATCH-PRO-32GB-CELL,32GB Storage with GPS + Cellular
+Smart Watch Pro,64GB,GPS,249.99,15,WATCH-PRO-64GB-GPS,64GB Storage with GPS
+Smart Watch Pro,64GB,GPS+Cellular,349.99,12,WATCH-PRO-64GB-CELL,64GB Storage with GPS + Cellular
