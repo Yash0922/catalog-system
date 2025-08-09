@@ -14,6 +14,7 @@ A full-stack e-commerce catalog system built with React (frontend) and Node.js/E
 ## Tech Stack
 
 ### Backend
+
 - **Node.js** with Express.js
 - **TypeScript** for type safety
 - **PostgreSQL** database
@@ -21,6 +22,7 @@ A full-stack e-commerce catalog system built with React (frontend) and Node.js/E
 - **CORS** enabled for cross-origin requests
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **React Router** for navigation
 - **Axios** for API calls
@@ -47,11 +49,13 @@ cd catalog-system
 ### 2. Database Setup
 
 #### Install PostgreSQL
+
 - **macOS**: `brew install postgresql`
 - **Ubuntu**: `sudo apt-get install postgresql postgresql-contrib`
 - **Windows**: Download from [PostgreSQL official website](https://www.postgresql.org/download/)
 
 #### Create Database
+
 ```bash
 # Start PostgreSQL service
 sudo service postgresql start  # Linux
@@ -189,17 +193,21 @@ catalog-system/
 ## API Endpoints
 
 ### Products
+
 - `GET /api/products` - Get all products
 - `GET /api/products/:id` - Get product by ID
 
 ### Product Types
+
 - `GET /api/product-types` - Get all product types
 
 ### Variants
+
 - `GET /api/variants` - Get all variants
 - `GET /api/variants/product/:productId` - Get variants by product ID
 
 ### Add-ons
+
 - `GET /api/add-ons` - Get all add-ons
 - `GET /api/add-ons/product/:productId` - Get add-ons by product ID
 
@@ -262,6 +270,7 @@ The system comes with pre-populated sample data including:
 ## Currency Support
 
 The system supports USD to INR conversion with:
+
 - Real-time exchange rates (when available)
 - Fallback to cached rates
 - Proper INR formatting (₹1,234.56)
@@ -271,15 +280,18 @@ The system supports USD to INR conversion with:
 ### Common Issues
 
 1. **Database Connection Error**
+
    - Verify PostgreSQL is running
    - Check DATABASE_URL in .env file
    - Ensure database exists
 
 2. **Port Already in Use**
+
    - Backend: Change PORT in backend/.env
    - Frontend: Change PORT in frontend/.env
 
 3. **CORS Issues**
+
    - Verify FRONTEND_URL in backend/.env
    - Check proxy setting in frontend/package.json
 
@@ -297,18 +309,62 @@ The system supports USD to INR conversion with:
 
 ## Production Deployment
 
-### Backend Deployment
+### Quick Deployment Options
 
-1. Set production environment variables
-2. Run database migrations: `npx prisma migrate deploy`
-3. Build the application: `npm run build`
-4. Start the server: `npm start`
+#### Option 1: One-Click Deployment
 
-### Frontend Deployment
+```bash
+# Run the automated deployment script
+./deploy.sh
+```
 
-1. Set production API URL in .env
-2. Build the application: `npm run build`
-3. Serve the build folder using a web server
+#### Option 2: Docker Compose (Recommended)
+
+```bash
+# Deploy everything with Docker
+docker-compose up -d
+```
+
+#### Option 3: Cloud Platforms
+
+**Recommended Stack: Vercel (Frontend) + Railway (Backend)**
+
+1. **Deploy Backend to Railway**:
+
+   - Connect your GitHub repository
+   - Railway will auto-detect and deploy the backend
+   - Add PostgreSQL database service
+   - Set environment variables
+
+2. **Deploy Frontend to Vercel**:
+   - Import your GitHub repository
+   - Set root directory to `frontend`
+   - Configure environment variables
+   - Deploy automatically
+
+### Supported Platforms
+
+- **Frontend**: Vercel, Netlify, AWS S3, Firebase Hosting
+- **Backend**: Railway, Heroku, AWS Elastic Beanstalk, Google Cloud Run
+- **Database**: Railway PostgreSQL, Heroku PostgreSQL, AWS RDS, Supabase
+
+### Environment Variables for Production
+
+**Backend (.env)**:
+
+```env
+DATABASE_URL=your-production-database-url
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+**Frontend (.env)**:
+
+```env
+REACT_APP_API_URL=https://your-backend-domain.com/api
+```
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## Contributing
 
@@ -327,6 +383,7 @@ This project is licensed under the MIT License.
 ## Support
 
 For support and questions:
+
 - Create an issue in the repository
 - Check the troubleshooting section above
 - Review the API documentation

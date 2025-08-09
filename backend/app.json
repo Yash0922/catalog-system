@@ -1,0 +1,26 @@
+{
+  "name": "Catalog System Backend",
+  "description": "Backend API for the catalog system",
+  "repository": "https://github.com/your-username/catalog-system",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "postgresql", "prisma"],
+  "image": "heroku/nodejs",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "FRONTEND_URL": {
+      "description": "Frontend URL for CORS",
+      "value": "https://your-frontend-app.vercel.app"
+    }
+  },
+  "scripts": {
+    "postdeploy": "npx prisma migrate deploy && npx prisma db seed"
+  }
+}
